@@ -1,6 +1,10 @@
-import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Users, Workflow, Brain, FileText, LogOut, Activity, Bell, Search } from "lucide-react";
+import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
+import {
+  LayoutDashboard, Users, Workflow, Brain, FileText,
+  LogOut, Activity, Bell, Search,
+} from "lucide-react";
 import type { ReactNode } from "react";
+import { logout, getCurrentUser } from "@/lib/api/auth";
 
 const nav = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -10,8 +14,24 @@ const nav = [
   { to: "/reportes", label: "Reportes", icon: FileText },
 ];
 
-export function AppShell({ children, title, subtitle }: { children: ReactNode; title: string; subtitle?: string }) {
+export function AppShell({
+  children, title, subtitle,
+}: {
+  children: ReactNode; title: string; subtitle?: string;
+}) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
+  const user = getCurrentUser();
+
+  async function handleLogout() {
+    await logout();
+    navigate({ to: "/login" });
+  }
+
+  // Iniciales del usuario
+  const initials = user?.nombre
+    ? user.nombre.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()
+    : "U";
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -46,14 +66,20 @@ export function AppShell({ children, title, subtitle }: { children: ReactNode; t
         </nav>
         <div className="p-3 border-t border-sidebar-border">
           <div className="flex items-center gap-3 px-2 py-2">
-            <div className="size-9 rounded-full bg-primary/30 grid place-items-center text-sm font-medium text-white">DR</div>
-            <div className="flex-1 min-w-0">
-              <div className="text-sm font-medium truncate">Dra. Restrepo</div>
-              <div className="text-[11px] text-sidebar-foreground/60">Administrador</div>
+            <div className="size-9 rounded-full bg-primary/30 grid place-items-center text-sm font-medium text-white">
+              {initials}
             </div>
-            <Link to="/login" className="text-sidebar-foreground/60 hover:text-white">
+            <div className="flex-1 min-w-0">
+              <div className="text-sm font-medium truncate">{user?.nombre ?? "Usuario"}</div>
+              <div className="text-[11px] text-sidebar-foreground/60">{user?.rol ?? "—"}</div>
+            </div>
+            <button
+              onClick={handleLogout}
+              className="text-sidebar-foreground/60 hover:text-white transition-colors"
+              title="Cerrar sesión"
+            >
               <LogOut className="size-4" />
-            </Link>
+            </button>
           </div>
         </div>
       </aside>
@@ -86,8 +112,17 @@ export function AppShell({ children, title, subtitle }: { children: ReactNode; t
   );
 }
 
-export function Card({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <div className={`bg-card rounded-xl border border-border p-5 ${className}`}>{children}</div>;
+export function Card({ children, className = "", onClick }: {
+  children: ReactNode; className?: string; onClick?: () => void;
+}) {
+  return (
+    <div
+      className={`bg-card rounded-xl border border-border p-5 ${className}`}
+      onClick={onClick}
+    >
+      {children}
+    </div>
+  );
 }
 
 export function RiesgoBadge({ riesgo }: { riesgo: "Bajo" | "Medio" | "Alto" | "Crítico" }) {

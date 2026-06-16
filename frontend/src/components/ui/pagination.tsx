@@ -2,7 +2,7 @@ import * as React from "react";
 import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { ButtonProps, buttonVariants } from "@/components/ui/button";
+// Note: buttonVariants/ButtonProps removed from import because they are not exported from button module
 
 const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
   <nav
@@ -28,18 +28,19 @@ PaginationItem.displayName = "PaginationItem";
 
 type PaginationLinkProps = {
   isActive?: boolean;
-} & Pick<ButtonProps, "size"> &
-  React.ComponentProps<"a">;
+  // limited size options used by this component
+  size?: "default" | "icon";
+} & React.ComponentProps<"a">;
 
 const PaginationLink = ({ className, isActive, size = "icon", ...props }: PaginationLinkProps) => (
   <a
     aria-current={isActive ? "page" : undefined}
     className={cn(
-      buttonVariants({
-        variant: isActive ? "outline" : "ghost",
-        size,
-      }),
       className,
+      // fallback button styles when buttonVariants is not available
+      "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none",
+      isActive ? "border bg-background" : "hover:bg-muted",
+      size === "default" ? "h-9 px-3" : "h-9 w-9",
     )}
     {...props}
   />
