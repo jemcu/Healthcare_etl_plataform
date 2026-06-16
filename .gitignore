@@ -1,0 +1,4 @@
+frontend/.workspace/
+frontend/node_modules/
+venv/
+.env
