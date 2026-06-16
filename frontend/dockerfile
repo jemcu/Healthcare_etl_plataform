@@ -5,4 +5,3 @@ RUN bun install
 RUN bun run build
 EXPOSE 10000
 CMD ["bun", "run", "start"]
-
