@@ -2,3 +2,25 @@ frontend/.workspace/
 frontend/node_modules/
 venv/
 .env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Entorno virtual
+venv/
+
+# Variables de entorno
+.env
+
+# Logs
+logs/
+*.log
+
+# Node
+node_modules/
+dist/
+
+# VS Code
+.vscode/
