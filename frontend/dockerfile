@@ -1,20 +1,7 @@
-# Usa la imagen oficial de Bun
 FROM oven/bun:latest
-
-# Establece el directorio de trabajo
 WORKDIR /app
-
-# Copia los archivos del proyecto
 COPY . .
-
-# Instala dependencias
 RUN bun install
-
-# Construye el proyecto con el script definido en package.json
 RUN bun run build
-
-# Expone el puerto (Render usa 10000 por defecto)
 EXPOSE 10000
-
-# Sirve la carpeta dist generada por Vite
-CMD ["bunx", "serve", "-s", "dist", "-l", "10000"]
+CMD ["bun run", "start"]
