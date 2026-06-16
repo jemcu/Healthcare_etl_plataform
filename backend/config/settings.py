@@ -1,7 +1,7 @@
 """
 HealthAnalytics IPS — Settings principal
 """
-
+import dj_database_url
 import os
 from pathlib import Path
 from datetime import timedelta
@@ -37,7 +37,11 @@ if ENV_PATH.exists():
 # ── Seguridad ─────────────────────────────────────────────────────────────────
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-cambia-esto-en-produccion-ahora')
 DEBUG = config('DEBUG', default=True, cast=bool)
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
+ALLOWED_HOSTS = config(
+    "ALLOWED_HOSTS",
+    default=".onrender.com,localhost,127.0.0.1",
+    cast=Csv(),
+)
 
 # ── Aplicaciones instaladas ───────────────────────────────────────────────────
 DJANGO_APPS = [
@@ -106,10 +110,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DB_ENGINE = config('DB_ENGINE', default='django.db.backends.postgresql')
 
 DATABASES = {
-    'default': {
-            'DATABASE': os.getenv('SUPABASE_URL'),
-            'connect_timeout': 10,
-        } if 'postgresql' in DB_ENGINE else {},
+    "default": dj_database_url.parse(
+        config("SUPABASE_URL")
+    )
 }
 
 # ── Modelo de usuario personalizado ──────────────────────────────────────────
