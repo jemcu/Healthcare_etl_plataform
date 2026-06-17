@@ -10,7 +10,7 @@ services:
       - key: DJANGO_SETTINGS_MODULE
         value: config.settings.production
       - key: DATABASE_URL
-        value: postgresql://postgres:TU_PASSWORD@aws-1-us-east-1.pooler.supabase.com:5432/postgres
+        value: postgresql://postgres.lufdsomzgtuhqxqslbya:Porque123esasi@aws-1-us-east-1.pooler.supabase.com:5432/postgres
       - key: CORS_ALLOWED_ORIGINS
         value: https://healthcare-etl-plataform-1.onrender.com,http://localhost:3000
 
